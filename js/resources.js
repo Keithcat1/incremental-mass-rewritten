@@ -10,7 +10,7 @@ const RESOURCES_DIS = {
         icon: "rp",
         class: "red",
 
-        desc: (gs)=>format(player.rp.points,0)+"<br>"+(player.mainUpg.bh.includes(6)||player.mainUpg.atom.includes(6)?formatGain(player.rp.points, tmp.rp.gain.mul(gs)):"(+"+format(tmp.rp.gain,0)+")"),
+        desc: (gs)=>format(player.rp.points,0)+" RP<br>"+(player.mainUpg.bh.includes(6)||player.mainUpg.atom.includes(6)?formatGain(player.rp.points, tmp.rp.gain.mul(gs)):"(+"+format(tmp.rp.gain,0)+")"),
     
         resetBtn() { FORMS.rp.reset() },
     },
@@ -19,7 +19,7 @@ const RESOURCES_DIS = {
         icon: "dm",
         class: "yellow",
 
-        desc: (gs)=>format(player.bh.dm,0)+"<br>"+(player.mainUpg.atom.includes(6)?formatGain(player.bh.dm, tmp.bh.dm_gain.mul(gs)):"(+"+format(tmp.bh.dm_gain,0)+")"),
+        desc: (gs)=>format(player.bh.dm,0)+" DM<br>"+(player.mainUpg.atom.includes(6)?formatGain(player.bh.dm, tmp.bh.dm_gain.mul(gs)):"(+"+format(tmp.bh.dm_gain,0)+")"),
     
         resetBtn() { FORMS.bh.reset() },
     },
@@ -34,7 +34,7 @@ const RESOURCES_DIS = {
         unl: ()=>player.bh.unl,
         icon: "atom",
 
-        desc: (gs)=>format(player.atom.points,0)+"<br>"+(hasElement(24)?formatGain(player.atom.points,tmp.atom.gain.mul(gs)):"(+"+format(tmp.atom.gain,0)+")"),
+        desc: (gs)=>format(player.atom.points,0)+" atoms<br>"+(hasElement(24)?formatGain(player.atom.points,tmp.atom.gain.mul(gs)):"(+"+format(tmp.atom.gain,0)+")"),
 
         resetBtn() { ATOM.reset() },
     },
@@ -43,14 +43,14 @@ const RESOURCES_DIS = {
         icon: "quark",
         class: "quark_color",
 
-        desc: (gs)=>format(player.atom.quarks,0)+"<br>"+(hasElement(14)?formatGain(player.atom.quarks,tmp.atom?tmp.atom.quarkGain.mul(tmp.atom.quarkGainSec).mul(gs):0):"(+"+format(tmp.atom.quarkGain,0)+")"),
+        desc: (gs)=>format(player.atom.quarks,0)+" quarks<br>"+(hasElement(14)?formatGain(player.atom.quarks,tmp.atom?tmp.atom.quarkGain.mul(tmp.atom.quarkGainSec).mul(gs):0):"(+"+format(tmp.atom.quarkGain,0)+")"),
     },
     md: {
         unl: ()=>MASS_DILATION.unlocked(),
         icon: "md",
         class: "green",
 
-        desc: (gs)=>format(player.md.particles,0)+"<br>"+(player.md.active?"(+"+format(tmp.md.rp_gain,0)+")":(hasTree("qol3")?formatGain(player.md.particles,tmp.md.passive_rp_gain.mul(gs)):"(inactive)")),
+        desc: (gs)=>format(player.md.particles,0)+" dilated particles<br>"+(player.md.active?"(+"+format(tmp.md.rp_gain,0)+")":(hasTree("qol3")?formatGain(player.md.particles,tmp.md.passive_rp_gain.mul(gs)):"(inactive)")),
 
         resetBtn() { MASS_DILATION.onactive() },
     },
@@ -72,7 +72,7 @@ const RESOURCES_DIS = {
         icon: "qu",
         class: "light_green",
 
-        desc: (gs)=>format(player.qu.points,0)+"<br>"+(hasUpgrade('br',8)?player.qu.points.formatGain(tmp.qu.gain.div(10).mul(gs)):"(+"+format(tmp.qu.gain,0)+")"),
+        desc: (gs)=>format(player.qu.points,0)+" quantum points<br>"+(hasUpgrade('br',8)?player.qu.points.formatGain(tmp.qu.gain.div(10).mul(gs)):"(+"+format(tmp.qu.gain,0)+")"),
 
         resetBtn() { QUANTUM.enter() },
     },
@@ -90,7 +90,7 @@ const RESOURCES_DIS = {
         icon: "dark",
         class: "gray",
 
-        desc: (gs)=>player.dark.rays.format(0)+"<br>"+(hasElement(118)?tmp.dark.rayEff.passive?player.dark.rays.formatGain(tmp.dark.gain.mul(tmp.dark.rayEff.passive).mul(gs)):"(+"+tmp.dark.gain.format(0)+")":"(require Og-118)"),
+        desc: (gs)=>player.dark.rays.format(0)+" rays<br>"+(hasElement(118)?tmp.dark.rayEff.passive?player.dark.rays.formatGain(tmp.dark.gain.mul(tmp.dark.rayEff.passive).mul(gs)):"(+"+tmp.dark.gain.format(0)+")":"(require Og-118)"),
 
         resetBtn() { DARK.reset() },
     },
@@ -107,7 +107,7 @@ const RESOURCES_DIS = {
         icon: "corrupted",
         class: "corrupted_text",
 
-        desc: (gs)=>format(player.dark.c16.shard,0)+"<br>"+(hasElement(232)?player.dark.c16.shard.formatGain(tmp.c16.shardGain):"(+"+tmp.c16.shardGain.format(0)+")"),
+        desc: (gs)=>format(player.dark.c16.shard,0)+" shards<br>"+(hasElement(232)?player.dark.c16.shard.formatGain(tmp.c16.shardGain):"(+"+tmp.c16.shardGain.format(0)+")"),
 
         resetBtn() { startC16() },
     },
@@ -116,14 +116,14 @@ const RESOURCES_DIS = {
         icon: "preQGSpeed",
         class: "orange",
 
-        desc: (gs)=>formatMult(tmp.preQUGlobalSpeed)+(tmp.inf_unl?"<br><span class='yellow'>"+formatMult(tmp.preInfGlobalSpeed)+"</span>":""),
+        desc: (gs)=>formatMult(tmp.preQUGlobalSpeed)+(tmp.inf_unl?" global speed<br><span class='yellow'>"+formatMult(tmp.preInfGlobalSpeed)+"</span>":""),
     },
     inf: {
         unl: ()=>tmp.inf_unl,
         icon: "inf",
         class: "yellow",
 
-        desc: (gs)=>player.inf.points.format(0)+"<br>(+"+tmp.IP_gain.format(0)+")"+"<br>("+formatPercent(player.mass.max(1).log10().max(1).log10().div(tmp.inf_limit.max(1).log10().max(10).log10()).max(0).min(1))+(tmp.brokenInf?" to next infinity)":" to infinity)"),
+        desc: (gs)=>player.inf.points.format(0)+" infinity points<br>(+"+tmp.IP_gain.format(0)+")"+"<br>("+formatPercent(player.mass.max(1).log10().max(1).log10().div(tmp.inf_limit.max(1).log10().max(10).log10()).max(0).min(1))+(tmp.brokenInf?" to next infinity)":" to infinity)"),
 
         resetBtn() { INF.goInf() },
     },
@@ -151,15 +151,15 @@ function setupResourcesHTML() {
         h1 += `
         <div id="${i}_res_div">
             <div ${i in TOOLTIP_RES ? `id="${i}_tooltip" class="tooltip ${rd.class||""}" tooltip-pos="left" tooltip-align="left" tooltip-text-align="left"` : `class="${rd.class||""}"`}>
-                <span style="margin-right: 5px; text-align: right;" id="${i}_res_desc">X</span>
-                <div><img src="images/${rd.icon||"mass"}.png" ${rd.resetBtn ? `onclick="reset_res_btn('${i}')" style="cursor: pointer;"` : ""}></div>
+                <span role="heading" aria-level="2" style="margin-right: 5px; text-align: right;" id="${i}_res_desc">X</span>
+                <div><img src="images/${rd.icon||"mass"}.png" ${rd.resetBtn ? `tabindex="0" role="button" aria-label="${i} reset" onclick="reset_res_btn('${i}')" style="cursor: pointer;"` : ""}></div>
             </div>
         </div>
         `
 
         h2 += `
         <div id="${i}_res_hide_div">
-            <div><img src="images/${rd.icon||"mass"}.png"><button style="margin-left: 10px; width: 100px;" onclick="hide_res('${i}')" id="${i}_res_hide_btn" class="btn">OFF</button></div>
+            <div><img src="images/${rd.icon||"mass"}.png"><button style="margin-left: 10px; width: 100px;" onclick="hide_res('${i}')" id="${i}_res_hide_btn" class="btn">${i} hide OFF</button></div>
         </div>
         `
     }
