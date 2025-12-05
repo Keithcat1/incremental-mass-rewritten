@@ -264,7 +264,7 @@ function createConfirm(text, id, yesFunction, noFunction) {
     const popup = document.createElement('div')
     popup.className = 'popup'
     popup.innerHTML = `
-    <div>
+    <div role="alert">
         ${text}
     </div><br>
     `
