@@ -118,11 +118,11 @@ function setupHTML() {
 	table = ""
 	for (let x = 1; x <= UPGS.main.cols; x++) {
 		let id = UPGS.main.ids[x]
-		table += `<div id="main_upg_${x}_div" style="width: 230px; margin: 0px 10px;"><b>${UPGS.main[x].title}</b><br><br><div style="font-size: 13px; min-height: 50px" id="main_upg_${x}_res"></div><br><div class="table_center" style="justify-content: start;">`
+		table += `<div id="main_upg_${x}_div" style="width: 230px; margin: 0px 10px;"><b role="heading" aria-level="1" >${UPGS.main[x].title}</b><br><br><div style="font-size: 13px; min-height: 50px" id="main_upg_${x}_res"></div><br><div class="table_center" style="justify-content: start;">`
 		for (let y = 1; y <= UPGS.main[x].lens; y++) {
 			let key = UPGS.main[x][y]
-			table += `<img onclick="UPGS.main[${x}].buy(${y})" onmouseover="UPGS.main.over(${x},${y})" onmouseleave="UPGS.main.reset()"
-			 style="margin: 3px;" class="img_btn" id="main_upg_${x}_${y}" src="${key.noImage?`images/test.png`:`images/upgrades/main_upg_${id+y}.png`}">`
+			table += `<button onclick="UPGS.main[${x}].buy(${y})"
+			 style="margin: 3px;" class="img_btn" id="main_upg_${x}_${y}" </button>`
 		}
 		table += `</div><br><button id="main_upg_${x}_auto" class="btn" style="width: 80px;" onclick="player.auto_mainUpg.${id} = !player.auto_mainUpg.${id}">OFF</button></div>`
 	}
@@ -393,24 +393,25 @@ function updateBeyondRanksRewardHTML() {
 }
 
 function updateMainUpgradesHTML() {
-	if (player.main_upg_msg[0] != 0) {
-		let upg1 = UPGS.main[player.main_upg_msg[0]]
-		let upg2 = UPGS.main[player.main_upg_msg[0]][player.main_upg_msg[1]]
-		let msg = "<span class='sky'>"+(typeof upg2.desc == "function" ? upg2.desc() : upg2.desc)+"</span><br><span>Cost: "+format(upg2.cost,0)+" "+upg1.res+"</span>"
-		if (upg2.effDesc !== undefined) msg += "<br><span class='green'>Currently: "+tmp.upgs.main[player.main_upg_msg[0]][player.main_upg_msg[1]].effDesc+"</span>"
-		tmp.el.main_upg_msg.setHTML(msg)
-	} else tmp.el.main_upg_msg.setTxt("")
 	for (let x = 1; x <= UPGS.main.cols; x++) {
 		let id = UPGS.main.ids[x]
 		let upg = UPGS.main[x]
+		let resource = UPGS.main[x].res;
 		let unl = upg.unl()
 		tmp.el["main_upg_"+x+"_div"].setDisplay(unl)
 		tmp.el["main_upg_"+x+"_res"].setTxt(`You have ${upg.getRes().format(0)} ${upg.res}`)
 		if (unl) {
 			for (let y = 1; y <= upg.lens; y++) {
 				let unl2 = upg[y].unl ? upg[y].unl() : true
+				let purchased = player.mainUpg[id].includes(y);
 				tmp.el["main_upg_"+x+"_"+y].changeStyle("visibility", unl2?"visible":"hidden")
-				if (unl2) tmp.el["main_upg_"+x+"_"+y].setClasses({img_btn: true, locked: !upg.can(y), bought: player.mainUpg[id].includes(y)})
+		if(!unl2) continue;
+		let upgrade = UPGS.main[x][y];
+		let costText = purchased ? "" : `<br>Cost: ${format(upgrade.cost,0)} ${resource}`;
+		let msg = "<span class='sky'>"+(typeof upgrade.desc == "function" ? upgrade.desc() : upgrade.desc)+"</span><span>" + costText + "</span>"
+		if (upgrade.effDesc !== undefined) msg += "<br><span class='green'>Currently: "+tmp.upgs.main[x][y].effDesc+"</span>"
+				let upgradeNode = tmp.el["main_upg_"+x+"_"+y];
+				upgradeNode.setHTML(msg);
 			}
 			tmp.el["main_upg_"+x+"_auto"].setDisplay(upg.auto_unl ? upg.auto_unl() : false)
 			tmp.el["main_upg_"+x+"_auto"].setTxt(player.auto_mainUpg[id]?"ON":"OFF")
