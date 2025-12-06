@@ -194,7 +194,7 @@ function updateResourcesHiderHTML() {
         tmp.el[i+"_res_hide_div"].setDisplay(unl)
 
         if (unl) {
-            tmp.el[i+"_res_hide_btn"].setTxt(player.options.res_hide[i] ? "ON" : "OFF")
+            tmp.el[i+"_res_hide_btn"].setTxt(player.options.res_hide[i] ? `${i} ON` : `${i} OFF`)
         }
     }
 }
