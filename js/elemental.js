@@ -1868,17 +1868,6 @@ function updateElementsHTML() {
 
     let ch = tElem.choosed
     tmp.el.elem_ch_div.setVisible(ch>0)
-    if (ch) {
-        let eu = elem_const.upgs[ch]
-        let res = [eu.inf?" Infinity Points":eu.dark?" Dark Shadows":" Quarks",eu.cs?" Corrupted Stars":" Exotic Atoms"][elayer]
-        let eff = tElem[["effect","mu_effect"][elayer]]
-
-        tmp.el.elem_desc.setHTML("<b>["+["","Muonic "][elayer]+ELEMENTS.fullNames[ch]+"]</b> "+eu.desc)
-        tmp.el.elem_desc.setClasses({sky: true, corrupted_text2: c16 && isElemCorrupted(ch,elayer)})
-        tmp.el.elem_cost.setTxt(format(eu.cost,0)+res+(eu.c16?" in Challenge 16":!infU7&&BR_ELEM.includes(ch)?" in Big Rip":"")+(player.qu.rip.active&&tElem.cannot.includes(ch)?" [CANNOT AFFORD in Big Rip]":""))
-        tmp.el.elem_eff.setHTML(eu.effDesc?"Currently: "+eu.effDesc(eff[ch]):"")
-    }
-
     for (let t = 1; t <= MAX_ELEM_TIERS; t++) {
         let unl = et[elayer] == t
         tmp.el["elemTier"+t+"_div"].setDisplay(unl)
@@ -1901,11 +1890,19 @@ function updateElementsHTML() {
                     upg.setVisible(unl2)
                     if (unl2) {
                         let eu = elem_const.upgs[x]
+                    let purchased = hasElement(x,elayer)
                         upg.setClasses(
                             c16 && isElemCorrupted(x,elayer)
                             ?{elements: true, locked: true, corrupted: true}
-                            :{elements: true, locked: !elem_const.canBuy(x), bought: hasElement(x,elayer), muon: elayer == 1, br: !infU7 && elayer == 0 && BR_ELEM.includes(x), final: elayer == 0 && x == 118, dark: elayer == 0 && eu.dark, c16: elayer == 0 && eu.c16, inf: elayer == 0 && eu.inf, cs: elayer == 1 && eu.cs}
+                            :{elements: true, locked: !elem_const.canBuy(x), bought: purchased, muon: elayer == 1, br: !infU7 && elayer == 0 && BR_ELEM.includes(x), final: elayer == 0 && x == 118, dark: elayer == 0 && eu.dark, c16: elayer == 0 && eu.c16, inf: elayer == 0 && eu.inf, cs: elayer == 1 && eu.cs}
                         )
+        let res = [eu.inf?" Infinity Points":eu.dark?" Dark Shadows":" Quarks",eu.cs?" Corrupted Stars":" Exotic Atoms"][elayer]
+        let eff = tElem[["effect","mu_effect"][elayer]]
+
+                        let elemDesc = "<b>["+["","Muonic "][elayer]+ELEMENTS.fullNames[x]+"]</b> "+eu.desc;
+                        let elemCost = purchased ? "" : "<br>Cost: "+format(eu.cost,0)+res+(eu.c16?" in Challenge 16":!infU7&&BR_ELEM.includes(x)?" in Big Rip":"")+(player.qu.rip.active&&tElem.cannot.includes(x)?" [CANNOT AFFORD in Big Rip]":"")
+                        let elemEffect = eu.effDesc?"<br>Currently: "+eu.effDesc(eff[x]):""
+                        upg.setHTML(`${elemDesc}${elemCost}${elemEffect}`);
                     }
                 }
             }
