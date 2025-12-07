@@ -280,7 +280,7 @@ function getPlayerData() {
         options: {
             font: 'Verdana',
             notation: 'sc',
-            tree_animation: 0,
+            tree_animation: 2,
             massDis: 0,
             res_hide: {},
 
