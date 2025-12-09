@@ -126,8 +126,8 @@ function setupQCHTML() {
 	for (let x = 0; x < QCs_len; x++) {
         table += `
         <div style="margin: 5px;">
-        <div style="margin: 5px" id='qc_tooltip${x}' class="tooltip" tooltip-html="${QCs.names[x]}"><img style="cursor: pointer" src="images/qcm${x}.png"></div>
-        <div><span id="qcm_mod${x}">0</span>/10</div>
+        <div style="margin: 5px" id='qc_tooltip${x}' class="tooltip"><img style="cursor: pointer" src="images/qcm${x}.png"></div>
+        <div><span aria-live="polite" id="qcm_mod${x}">0</span>/10</div>
         <div id="qcm_btns${x}"><button onclick="QCs.incMod(${x},-1)">-</button><button onclick="QCs.incMod(${x},1)">+</button></div>
         </div>
         `
@@ -205,7 +205,7 @@ function updateQCHTML() {
             tmp.el["qcm_mod"+x].setTxt(QCs.getMod(x))
             tmp.el["qcm_btns"+x].setDisplay(!QCs.active())
 
-            tmp.el['qc_tooltip'+x].setTooltip(
+            tmp.el['qc_tooltip'+x].setHTML(
                 `
                 <h3>${QCs.names[x]}</h3>
                 <br class='line'>
