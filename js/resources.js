@@ -62,7 +62,7 @@ const RESOURCES_DIS = {
         desc: (gs)=>{
             let g = tmp.SN_passive ? tmp.supernova.passive.div(FPS) : tmp.supernova.bulk.sub(player.supernova.times).max(0)
             let h = tmp.inf_unl?format(g.mul(FPS),0)+"/sec":format(g,0)
-            return format(player.supernova.times,0)+(player.supernova.post_10?"<br>(+"+h+")":"")
+            return format(player.supernova.times,0)+ " supernovas" + (player.supernova.post_10?"<br>(+"+h+")":"")
         },
 
         resetBtn() { if (player.supernova.post_10) SUPERNOVA.reset(false,false,true) },
@@ -72,7 +72,7 @@ const RESOURCES_DIS = {
         icon: "qu",
         class: "light_green",
 
-        desc: (gs)=>format(player.qu.points,0)+" quantum points<br>"+(hasUpgrade('br',8)?player.qu.points.formatGain(tmp.qu.gain.div(10).mul(gs)):"(+"+format(tmp.qu.gain,0)+")"),
+        desc: (gs)=>format(player.qu.points,0)+" quantum foam<br>"+(hasUpgrade('br',8)?player.qu.points.formatGain(tmp.qu.gain.div(10).mul(gs)):"(+"+format(tmp.qu.gain,0)+")"),
 
         resetBtn() { QUANTUM.enter() },
     },
