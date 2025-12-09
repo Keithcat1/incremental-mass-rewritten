@@ -72,7 +72,7 @@ const NO_REQ_QU = ['qol1','qol2','qol3','qol4','qol5',
 
 const TREE_UPGS = {
     buy(x, auto=false) {
-        if ((tmp.supernova.tree_choosed == x || auto) && tmp.supernova.tree_afford[x]) {
+        if (tmp.supernova.tree_afford[x]) {
             if (this.ids[x].qf) player.qu.points = player.qu.points.sub(this.ids[x].cost).max(0)
             else if (this.ids[x].cs) player.dark.c16.shard = player.dark.c16.shard.sub(this.ids[x].cost).max(0)
             else player.supernova.stars = player.supernova.stars.sub(this.ids[x].cost).max(0)
@@ -1246,8 +1246,7 @@ function setupTreeHTML() {
                 let u = TREE_UPGS.ids[id]
 
                 let option = id == "" ? `style="visibility: hidden"` : ``
-                let img = TREE_UPGS.ids[id]?`<img src="images/tree/${u.icon||id}.png">`:""
-                table += `<button id="treeUpg_${id}" class="btn_tree" onclick="TREE_UPGS.buy('${id}'); tmp.supernova.tree_choosed = '${id}'" ${option}>${img}</button>`
+                table += `<button id="treeUpg_${id}" class="btn_tree" onclick="TREE_UPGS.buy('${id}'); tmp.supernova.tree_choosed = '${id}'" ${option}></button>`
             }
             table += `</div>`
         }
@@ -1348,18 +1347,6 @@ function changeTreeAnimation() {
 
 function updateTreeHTML() {
     let c16 = tmp.c16active
-    let req = ""
-    let t_ch = TREE_UPGS.ids[tmp.supernova.tree_choosed]
-    if (tmp.supernova.tree_choosed != "") req = t_ch.req?`<span class="${t_ch.req()?"green":"red"}">${t_ch.reqDesc?" Requirement: "+(typeof t_ch.reqDesc == "function"?t_ch.reqDesc():t_ch.reqDesc):""}</span>`:""
-    tmp.el.tree_desc.setHTML(
-        tmp.supernova.tree_choosed == "" ? `<div style="font-size: 12px; font-weight: bold;"><span class="gray">(click any tree upgrade to show)</span></div>`
-        : `<div style="font-size: 12px; font-weight: bold;"><span class="gray">(click again to buy if affordable)</span>${req}</div>
-        ${`<span class="sky"><b>[${tmp.supernova.tree_choosed}]</b> ${t_ch.desc}</span>`.corrupt(c16 && CORRUPTED_TREE.includes(tmp.supernova.tree_choosed))}<br>
-        <span>Cost: ${format(t_ch.cost,2)} ${t_ch.qf?'Quantum foam':t_ch.cs?'<span class="corrupted_text">Corrupted Shard</span>':'Neutron star'}</span><br>
-        <span class="green">${t_ch.effDesc?"Currently: "+t_ch.effDesc(tmp.supernova.tree_eff[tmp.supernova.tree_choosed]):""}</span>
-        `
-    )
-
     for (let i = 0; i < TREE_TAB.length; i++) {
         tmp.el["tree_tab"+i+"_btn"].setDisplay(TREE_TAB[i].unl?TREE_TAB[i].unl():true)
         tmp.el["tree_tab"+i+"_notify"].setDisplay(tmp.supernova.tree_afford2[i].length>0)
@@ -1368,8 +1355,21 @@ function updateTreeHTML() {
             let id = tmp.supernova.tree_had2[i][x]
             let unl = tmp.supernova.tree_unlocked[id]
             tmp.el["treeUpg_"+id].setVisible(unl)
-            let bought = player.supernova.tree.includes(id)
-            if (unl) tmp.el["treeUpg_"+id].setClasses(player.dark.c16.tree.includes(id) || c16 && CORRUPTED_TREE.includes(id) ? {btn_tree: true, corrupted: true, choosed: id == tmp.supernova.tree_choosed} : {btn_tree: true, qu_tree: TREE_UPGS.ids[id].qf, locked: !tmp.supernova.tree_afford[id], bought: bought, choosed: id == tmp.supernova.tree_choosed})
+            const bought = player.supernova.tree.includes(id)
+            let upg = TREE_UPGS.ids[id]
+            let cost = "";
+            if(!bought) {
+                cost = `<br><span>Cost: ${format(upg.cost,2)} ${upg.qf?'Quantum foam':upg.cs?'<span class="corrupted_text">Corrupted Shard</span>':'Neutron star'}</span>`
+            }
+             let req = upg.req && !tmp.supernova.tree_afford[id] && !bought ?`${upg.reqDesc?" Requirement: "+(typeof upg.reqDesc == "function"?upg.reqDesc():upg.reqDesc):""}`:""
+            tmp.el["treeUpg_"+id].setHTML(
+                `${`<span class="sky"><b>[${id}]</b> ${upg.desc}</span>`.corrupt(c16 && CORRUPTED_TREE.includes(id))}<br>
+                ${req}
+                <span class="green">${upg.effDesc?"Currently: "+upg.effDesc(tmp.supernova.tree_eff[id]):""}</span>
+                ${cost}
+                `
+            )
+
         }
     }
 }
