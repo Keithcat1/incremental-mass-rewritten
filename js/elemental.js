@@ -1804,7 +1804,7 @@ function setupElementsHTML() {
         for (let i = 0; i < ELEMENTS.map[k-1].length; i++) {
             let m = ELEMENTS.map[k-1][i]
             if (m=='v') table += `</div><div class="table_center">`
-            else if (m=='_' || !isNaN(Number(m))) table += `<div ${ELEMENTS.la[m]!==undefined&&k==1?`id='element_la_${m}'`:""} style="width: 50px; height: 50px">${ELEMENTS.la[m]!==undefined?"<br>"+ELEMENTS.la[m]:""}</div>`
+            else if (m=='_' || !isNaN(Number(m))) table += `<div ${ELEMENTS.la[m]!==undefined&&k==1?`id='element_la_${m}'`:""} style="width: 50px; height: 50px">${ELEMENTS.la[m]!==undefined?"<br><h2>"+ELEMENTS.la[m]:""}</h2></div>`
             else if (m=='x') {
                 num++
                 table += ELEMENTS.upgs[num]===undefined?`<div style="width: 50px; height: 50px"></div>`
