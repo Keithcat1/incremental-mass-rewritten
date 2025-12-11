@@ -564,6 +564,7 @@ function loadGame(start=true, gotNaN=false) {
             })
         }
         document.getElementById('auto_qu_input').value = player.qu.auto.input
+        document.getElementById("mg_max_gain").valueAsNumber = player.dark.run.gamount
         document.getElementById('auto_qu_input').addEventListener('input', e=>{
             player.qu.auto.input = e.target.value
         })

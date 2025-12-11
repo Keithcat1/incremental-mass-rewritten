@@ -369,9 +369,9 @@
                             You have <span id="unassignQuarkAmt">X</span> unassigned Quarks<br><br>
                             <div>
                                 <button class="btn" onclick="ATOM.particles.assignAll()">Distribute</button><br><br>
-                                <input class="input_ratio" style="color: #0f0;" type="number" min="1" id="ratio_d0">
-                                <input class="input_ratio" style="color: #ff0;" type="number" min="1" id="ratio_d1">
-                                <input class="input_ratio" style="color: #f00;" type="number" min="1" id="ratio_d2">
+                                <input onkeydown="ignoreKeydownEvent(event)" class="input_ratio" style="color: #0f0;" type="number" min="1" id="ratio_d0">
+                                <input onkeydown="ignoreKeydownEvent(event)" class="input_ratio" style="color: #ff0;" type="number" min="1" id="ratio_d1">
+                                <input onkeydown="ignoreKeydownEvent(event)" class="input_ratio" style="color: #f00;" type="number" min="1" id="ratio_d2">
                             </div>
                             <br><br>
                             Ratio Mode: <span id="atom_ratio">X</span><br>
@@ -438,7 +438,7 @@
                         </div><div id="stab_frame6_2">
                             <button class="btn" onclick="QUANTUM.auto.switch()">Auto-Quantum: <span id="auto_qu">OFF</span></button>
                             <button class="btn" onclick="QUANTUM.auto.switchMode()">Auto-Quantum Mode: <span id="auto_qu_mode">Amount</span></button><br><br>
-                            <input type="text" id="auto_qu_input"><br>
+                            <input onkeydown="ignoreKeydownEvent(event)" type="text" id="auto_qu_input"><br>
                             = <span id="auto_qu_res"></span>
                         </div><div id="stab_frame6_3">
                             You have <span id="prim_theorem">0</span> Primordium Theorem (based on Blueprint Particles)<br>
@@ -490,12 +490,8 @@
                             <button class="btn half_full" onclick="player.dark.run.glyphs = [E(0),E(0),E(0),E(0),E(0),E(0)]">Clear all glyphs</button>
                             <br><br>
                             <div>
-                                <button class="btn" onclick="player.dark.run.gamount = 0">=0</button>
-                                <button class="btn" onclick="player.dark.run.gamount = Math.max(1,player.dark.run.gamount-10)">-10</button>
-                                <button class="btn" onclick="player.dark.run.gamount = Math.max(1,player.dark.run.gamount-1)">-1</button>
-                                <span style="margin: 0 10px;">+<span id="mg_max_gain">X</span> to maximum gain any glyph</span>
-                                <button class="btn" onclick="player.dark.run.gamount++">+1</button>
-                                <button class="btn" onclick="player.dark.run.gamount += 10">+10</button>
+                                <label for="mg_max_gain">Max glyph limit</label>
+                                <input onkeydown="ignoreKeydownEvent(event)" type="number" id="mg_max_gain" placeholder="Maximum glyphs to allow earning while in earn until mode" value="0" oninput="player.dark.run.gamount = Number(event.target.value)" />
                             </div><br>
                             <div class="table_center" id="mass_glyph_table"></div><br>
                             <div class="table_center"><div id="glyph_upg_table" style="width: 500px;"></div></div><br>

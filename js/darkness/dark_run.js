@@ -208,26 +208,31 @@ function updateDarkRunHTML() {
     let dtmp = tmp.dark
 
     tmp.el.dark_run_btn.setTxt(dra?"Exit Dark Run":"Start Dark Run")
-    tmp.el.mg_btn_mode.setTxt(["Earning", "Max Earning", "Clear Glyph"][player.dark.run.gmode])
+    tmp.el.mg_btn_mode.setTxt(["Max Earning", "Earning until", "Clear Glyph"][player.dark.run.gmode])
     tmp.el.mg_max_gain.setTxt(format(player.dark.run.gamount,0))
     for (let x = 0; x < MASS_GLYPHS_LEN; x++) {
         tmp.el["mass_glyph"+x].setHTML(
             c16 ? "Corrupted" : format(player.dark.run.glyphs[x],0)
             + (dra ? " (+" + format(tmp.dark.mass_glyph_gain[x],0) + ")" : dtmp.mg_passive[x]>0 ? " ["+format(dtmp.mg_passive[x],0)+"]" : ""))
-        tmp.el["mass_glyph_tooltip"+x].setTooltip("<h3>"+DARK_RUN.mass_glyph_name[x]+"</h3><br class='line'>"+DARK_RUN.mass_glyph_effDesc[x](tmp.dark.mass_glyph_eff[x]))
+        tmp.el["mass_glyph_tooltip"+x].setHTML("<h3>"+DARK_RUN.mass_glyph_name[x]+"</h3><br class='line'>"+DARK_RUN.mass_glyph_effDesc[x](tmp.dark.mass_glyph_eff[x]))
     }
+    for (let x = 1; x < GLYPH_UPG_LEN; x++) {
+        let unl = x <= tmp.dark.glyph_upg_unls
 
-    let gum = tmp.mass_glyph_msg
+        tmp.el['glyph_upg'+x].setDisplay(unl)
 
-    let msg = ''
-    if (gum > 0) {
-        let u = DARK_RUN.upg[gum]
-        let ua = player.dark.run.upg[gum]||0
+        if (!unl) continue
+
+        let u = DARK_RUN.upg[x]
+        let ua = player.dark.run.upg[x]||0
         let max = u.max||Infinity
+
+        tmp.el['glyph_upg'+x].setClasses({img_btn: true, locked: !isAffordGlyphCost(u.cost(ua)) && ua < max, bought: ua >= max})
+    let msg = ''
 
         let desc = "<span class='sky'>"+(typeof u.desc == "function" ? u.desc() : u.desc)+"</span>"
 
-        if (c16 && gum == 14) desc = desc.corrupt()
+        if (c16 && x == 14) desc = desc.corrupt()
 
         msg = "[Level "+format(ua,0)+(isFinite(max)?" / "+format(max,0):"")+"]<br>"+desc+"<br>"
 
@@ -240,22 +245,9 @@ function updateDarkRunHTML() {
             msg +=  "<span>Cost: "+cr+"</span><br>"
         }
         
-		if (u.effDesc !== undefined) msg += "<span class='green'>Currently: "+u.effDesc(tmp.glyph_upg_eff[gum])+"</span>"
-    }
-    tmp.el.glyph_upg_msg.setHTML(msg)
+		if (u.effDesc !== undefined) msg += "<span class='green'>Currently: "+u.effDesc(tmp.glyph_upg_eff[x])+"</span>"
+        tmp.el["glyph_upg"+x].setHTML(msg)
 
-    for (let x = 1; x < GLYPH_UPG_LEN; x++) {
-        let unl = x <= tmp.dark.glyph_upg_unls
-
-        tmp.el['glyph_upg'+x].setDisplay(unl)
-
-        if (!unl) continue
-
-		let u = DARK_RUN.upg[x]
-        let ua = player.dark.run.upg[x]||0
-        let max = u.max||Infinity
-
-		tmp.el['glyph_upg'+x].setClasses({img_btn: true, locked: !isAffordGlyphCost(u.cost(ua)) && ua < max, bought: ua >= max})
 	}
 
     tmp.el.FSS_eff2.setHTML(
@@ -308,8 +300,8 @@ function setupDarkRunHTML() {
     for (let x = 0; x < MASS_GLYPHS_LEN; x++) {
         html += `
         <div style="margin: 5px; width: 100px">
-            <div id="mass_glyph_tooltip${x}" class="tooltip" style="margin-bottom: 5px;" onclick="glyphButton(${x})" tooltip-html="${DARK_RUN.mass_glyph_name[x]}"><img style="cursor: pointer" src="images/glyphs/glyph${x}.png"></div>
-            <div id="mass_glyph${x}">0</div>
+            <div id="mass_glyph_tooltip${x}" class="tooltip" style="margin-bottom: 5px;">${x}<br>${DARK_RUN.mass_glyph_name[x]}<img style="cursor: pointer" src="images/glyphs/glyph${x}.png"></div>
+            <div id="mass_glyph${x}" onclick="glyphButton(${x})">0</div>
         </div>
         `
     }
@@ -323,7 +315,7 @@ function setupDarkRunHTML() {
 
     for (let x = 1; x < GLYPH_UPG_LEN; x++) {
         html += `
-        <img id="glyph_upg${x}" onclick="buyGlyphUpgrade(${x})" src="images/glyphs/glyph_upg${x}.png" style="margin: 3px;" class="img_btn" onmouseover="tmp.mass_glyph_msg = ${x}" onmouseleave="tmp.mass_glyph_msg = 0">
+        <button id="glyph_upg${x}" onclick="buyGlyphUpgrade(${x})" style="margin: 3px;" class="img_btn"></button><br>
         `
     }
 

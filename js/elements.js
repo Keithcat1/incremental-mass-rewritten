@@ -602,3 +602,7 @@ function updateHTML() {
 		}
 	}
 }
+// pressing arrows can move you out of input boxes, so this gets attached to them as an event and eats any hotkeys while you're focused on one
+function ignoreKeydownEvent(event) {
+    event.stopPropagation()
+}
