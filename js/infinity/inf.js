@@ -3,6 +3,11 @@ const INF = {
         player.inf.reached = false
         player.mass = E(0)
 
+
+        // reset radio buttons
+    for (const radio of document.getElementsByName("infinity_theorem_selection")) {
+            radio.checked = false;
+        }
         // QoL
 
         let iu11 = hasInfUpgrade(11), iu15 = hasInfUpgrade(15)
