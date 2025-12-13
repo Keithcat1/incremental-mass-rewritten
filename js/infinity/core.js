@@ -549,29 +549,35 @@ function setupCoreHTML() {
 
     for (let i = 0; i < 4; i++) {
         h += `
-        <div id="preT${i}" class="theorem_div tooltip" tooltip-pos="bottom" onclick="choosePreTheorem(${i})"></div>
+        <label for="preT${i}" id="preTlabel${i}"></label>
+        <input type="radio" id="preT${i}" name="infinity_theorem_selection" class="theorem_div tooltip" tooltip-pos="bottom" onchange="choosePreTheorem(${i})"></input>
         `
     }
 
     new Element('pre_theorem').setHTML(h)
 
-    h = ``
+    h = `<ol>`
 
     for (let i = 0; i < MAX_CORE_LENGTH; i++) {
         h += `
-        <div id="coreT${i}" class="theorem_div tooltip" onclick="chooseTheorem('${i}',true)"></div>
+        <li id="core${i}" class="theorem_div tooltip">
+            <div id="coreT${i}"></div>
+            <button onclick="chooseTheorem('${i}',true)">Choose</button>
+</li>
         `
     }
 
+    h += `</ol>`
     new Element('theorem_table').setHTML(h)
 
-    h = ``
+    h = `<ul>`
 
     for (let i = 0; i < MAX_INV_LENGTH; i++) {
         h += `
-        <div>
-            <div id="invT${i}" class="theorem_div tooltip" onclick="chooseTheorem('${i}')"></div>
-        </div>
+        <li id="inv${i}">
+            <div id="invT${i}" class="theorem_div tooltip"></div>
+            <button onclick="chooseTheorem('${i}')">Choose</button>
+        </li>
         `
     }
 
@@ -598,12 +604,11 @@ function updateCoreHTML() {
             if (!reached) continue
 
             let p = player.inf.pre_theorem[i], s = chanceToBool(p.star_c), power = pm.mul(p.power_m).mul(100).add(100).round().div(100) // Math.round(100+pm*p.power_m*100)/100
-            pt.setClasses({theorem_div:true, tooltip:true, [p.type]:true, choosed: player.inf.pt_choosed == i})
-            pt.setHTML(getTheoremHTML({type: p.type, level: fl, power, star: s},true))
+            //pt.setClasses({theorem_div:true, tooltip:true, [p.type]:true, choosed: player.inf.pt_choosed == i})
+            //pt.setHTML(getTheoremHTML({type: p.type, level: fl, power, star: s},true))
 
-            pt.setTooltip(`
-            <h3>${CORE[p.type].title}</h3>
-            <br class='line'>
+            tmp.el[`preTlabel${i}`].setHTML(`${s} ${CORE[p.type].title}
+            [Level ${format(fl,0)}, Power: ${format(pm.mul(p.power_m).mul(100),0)}%]
             ${getTheoremPreEffects(p,s,power,fl)}
             `)
         }
@@ -618,25 +623,26 @@ function updateTheoremCore() {
     resetCoreTemp()
 
     for (let i = 0; i < MAX_CORE_LENGTH; i++) {
-        let u = i < tmp.min_core_len
         let t = tmp.el['coreT'+i]
+        let u = i < tmp.min_core_len
 
-        t.setDisplay(u)
+
+        tmp.el[`core${i}`].setDisplay(u)
+        //t.setDisplay(u)
         if (!u) continue
-
         let p = player.inf.core[i]
 
-        t.setClasses(p?{theorem_div:true, tooltip:true, [p.type]:true, choosed: i+"c" == t_choosed}:{theorem_div:true})
 
-        t.setHTML(p?getTheoremHTML(p,true):"")
+        //t.setClasses(p?{theorem_div:true, tooltip:true, [p.type]:true, choosed: i+"c" == t_choosed}:{theorem_div:true})
+
+        //t.setHTML(p?getTheoremHTML(p,true):"")
 
         if (p) {
             let type = p.type, l = p.level, s = p.star, ct = core_tmp[type]
             ct.total_p = ct.total_p.mul(p.power)
             for (let i = 0; i < MAX_STARS; i++) if (s[i]) ct.total_s[i] = ct.total_s[i].add(l)
 
-            t.setTooltip(`
-            <h3>${CORE[type].title}</h3><br>
+            t.setHTML(`            ${CORE[type].title}
             [Level ${format(p.level,0)}, Power: ${format(p.power.mul(100),0)}%]
             <br class='line'>
             ${getTheoremPreEffects(p,p.star,p.power)}
@@ -651,14 +657,15 @@ function updateTheoremInv() {
     for (let i = 0; i < MAX_INV_LENGTH; i++) {
         let t = tmp.el['invT'+i]
         let p = player.inf.inv[i]
+        let empty = !p ? true : false;
+        tmp.el[`inv${i}`].setDisplay(!empty)
+        if(empty) continue;
 
-        t.setClasses(p?{theorem_div:true, tooltip:true, [p.type]:true, choosed: i == t_choosed}:{theorem_div:true})
+        //t.setClasses(p?{theorem_div:true, tooltip:true, [p.type]:true, choosed: i == t_choosed}:{theorem_div:true})
 
-        t.setHTML(p?getTheoremHTML(p,true):"")
+        //t.setHTML(p?getTheoremHTML(p,true):"")
 
-        t.setTooltip(p?`
-        <h3>${CORE[p.type].title}</h3><br>
-        [Level ${format(p.level,0)}, Power: ${format(p.power*100,0)}%]
+        t.setHTML(p?`        ${CORE[p.type].title}        [Level ${format(p.level,0)}, Power: ${format(p.power*100,0)}%]
         <br class='line'>
         ${getTheoremPreEffects(p,p.star,p.power)}
         `:"")
