@@ -5,7 +5,7 @@ function setupChalHTML() {
         table += `<div class="table_center" style="min-height: 160px;">`
         for (let y = 1; y <= Math.min(CHALS.cols-4*x,4); y++) {
             let i = 4*x+y
-            table += `<div id="chal_div_${i}" style="width: 120px; margin: 5px;"><img id="chal_btn_${i}" onclick="CHALS.choose(${i})" class="img_chal" src="images/chal_${i}.png"><br><span id="chal_comp_${i}">X</span></div>`
+            table += `<button id="chal_div_${i}" style="width: 120px; margin: 5px;" onclick="CHALS.choose(${i})">Challenge ${i} <div id="chal_comp_${i}">X</div></button>`
         }
         table += "</div>"
 	}
@@ -18,7 +18,6 @@ function updateChalHTML() {
             let chal = CHALS[x]
             let unl = chal.unl ? chal.unl() : true
             tmp.el["chal_div_"+x].setDisplay(unl)
-            tmp.el["chal_btn_"+x].setClasses({img_chal: true, ch: CHALS.inChal(x), chal_comp: player.chal.comps[x].gte(tmp.chal.max[x])})
             if (unl) {
                 tmp.el["chal_comp_"+x].setTxt(format(player.chal.comps[x],0)+(tmp.chal.max[x].gte(EINF)?"":" / "+format(tmp.chal.max[x],0)))
             }
