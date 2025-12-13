@@ -1355,7 +1355,7 @@ function updateTreeHTML() {
             let id = tmp.supernova.tree_had2[i][x]
             let unl = tmp.supernova.tree_unlocked[id]
             tmp.el["treeUpg_"+id].setVisible(unl)
-            const bought = player.supernova.tree.includes(id)
+            const bought = hasTree(id)
             let upg = TREE_UPGS.ids[id]
             let cost = "";
             if(!bought) {
