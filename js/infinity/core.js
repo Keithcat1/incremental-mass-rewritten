@@ -607,8 +607,9 @@ function updateCoreHTML() {
             //pt.setClasses({theorem_div:true, tooltip:true, [p.type]:true, choosed: player.inf.pt_choosed == i})
             //pt.setHTML(getTheoremHTML({type: p.type, level: fl, power, star: s},true))
 
-            tmp.el[`preTlabel${i}`].setHTML(`${s} ${CORE[p.type].title}
-            [Level ${format(fl,0)}, Power: ${format(pm.mul(p.power_m).mul(100),0)}%]
+            const starAmount = s.reduce((total, star) => star === true? total + 1 : total, 0)
+            tmp.el[`preTlabel${i}`].setHTML(`${starAmount} ${CORE[p.type].title}
+            [Level ${format(fl,0)}, Power: ${format(power*100, 0)}%]
             ${getTheoremPreEffects(p,s,power,fl)}
             `)
         }
